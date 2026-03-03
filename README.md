@@ -21,7 +21,7 @@
 Use the non-mini one for more accurate test results, but honestly the mini one should be totally fine anyway. I really rushed this and paid zero attention to the test code due to lack of time. If there are platform incompatibilities, ask your agent to resolve them just make sure the core test logic stays the same. The test code should be accurate enough as tested so far. 
 
 Tested:
-- GPT 5.3 High - failed and had to modify the test conditions as a last resort after 1-2h~ 
+- GPT 5.3 High - Failed, and modified the test conditions as a last resort after ~1–2 hours
 
 # Iris
 
