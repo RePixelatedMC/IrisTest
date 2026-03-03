@@ -1,0 +1,206 @@
+{
+    "name": "Temperate Beach",
+    "color": "#D4A74A",
+    "rarity": 1,
+    "derivative": "BEACH",
+    "vanillaDerivative": "BEACH",
+    "generators": [{
+        "min": 1,
+        "max": 1,
+        "generator": "mountain"
+    }],
+    "layers": [
+        {
+            "minHeight": 2,
+            "maxHeight": 4,
+            "style": {
+                "style": "FRACTAL_WATER",
+                "fracture": {
+                    "style": "STATIC",
+                    "multiplier": 15
+                }
+            },
+            "zoom": 0.4,
+            "slopeCondition": {
+                "minimumSlope": 3.95,
+                "maximumSlope": 6
+            },
+            "palette": [
+                {
+                    "block": "minecraft:mud",
+                    "weight": 4
+                },
+                {
+                    "block": "minecraft:cobblestone",
+                    "weight": 4
+                },
+                {
+                    "block": "minecraft:tuff",
+                    "weight": 4
+                },
+                {
+                    "block": "minecraft:stone",
+                    "weight": 10
+                }
+            ]
+        },
+        {
+            "style": {
+                "style": "STATIC_HERMITE",
+                "exponent": 1.5,
+                "fracture": {
+                    "style": "CELLULAR",
+                    "fracture": {
+                        "style": "STATIC",
+                        "multiplier": 15
+                    }
+                }
+            },
+            "zoom": 0.55,
+            "palette": [
+                {
+                    "weight": 55,
+                    "block": "minecraft:podzol"
+                },
+
+                {
+                    "weight": 4,
+                    "block": "minecraft:podzol"
+                },
+                {
+                    "weight": 4,
+                    "block": "minecraft:podzol"
+                },
+                {
+                    "weight": 4,
+                    "block": "minecraft:podzol"
+                },
+                {
+                    "weight": 4,
+                    "block": "minecraft:podzol"
+                },
+                {
+                    "weight": 4,
+                    "block": "minecraft:podzol"
+                },
+                {
+                    "weight": 4,
+                    "block": "minecraft:podzol"
+                },
+
+                {
+                    "weight": 55,
+                    "block": "minecraft:podzol"
+                },
+                {
+                    "block": "minecraft:podzol"
+                },
+                {
+                    "weight": 55,
+                    "block": "minecraft:podzol"
+                }
+            ]
+        },
+        {
+            "minHeight": 2,
+            "maxHeight": 2,
+            "palette": [
+                {
+                    "block": "minecraft:mud"
+                }
+            ]
+        },
+        {
+            "minHeight": 2,
+            "maxHeight": 2,
+            "palette": [
+                {
+                    "block": "minecraft:dirt"
+                }
+            ]
+        },
+        {
+            "style": {
+                "style": "STATIC"
+            },
+            "minHeight": 1,
+            "maxHeight": 1,
+            "palette": [
+                {
+                    "block": "minecraft:dirt"
+                },
+                {
+                    "block": "minecraft:stone"
+                }
+            ]
+        }
+    ],
+    "objects": [{
+        "mode": "MIN_HEIGHT",
+        "chance": 0.1,
+        "rotation": {
+            "yAxis": {
+                "min": 0,
+                "max": 270,
+                "interval": 90,
+                "enabled": true
+            },
+            "enabled": true
+        },
+        "place": [
+            "clutter/boulder1",
+            "clutter/boulder2",
+            "clutter/boulder3",
+            "clutter/boulder4",
+            "clutter/boulder5",
+            "clutter/boulder6",
+            "clutter/boulder7",
+            "clutter/boulder8",
+            "clutter/boulder9",
+            "clutter/boulder10",
+            "clutter/boulder11",
+            "clutter/boulder12",
+            "clutter/boulder13",
+            "clutter/boulder14"
+        ]
+    }],
+    "decorators": [
+        {
+            "chance": 0.003,
+            "variance": {"style": "STATIC"},
+            "zoom": 0.3,
+            "palette": [
+                {
+                    "data": {
+                        "face": "floor",
+                        "powered": false,
+                        "facing": "east"
+                    },
+                    "block": "minecraft:stone_button"
+                },
+                {"block": "minecraft:air"},
+                {
+                    "data": {
+                        "face": "floor",
+                        "powered": false,
+                        "facing": "south"
+                    },
+                    "block": "minecraft:stone_button"
+                }
+            ],
+            "style": {"style": "STATIC"}
+        },
+        {
+            "partOf": "SHORE_LINE",
+            "chance": 0.09,
+            "stackMin": 1,
+            "stackMax": 4,
+            "palette": [{"block": "minecraft:sugar_cane"}],
+            "style": {
+                "style": "NOWHERE",
+                "zoom": 0.65
+            },
+            "heightVariance": {"style": "STATIC"}
+        }
+    ]
+}

@@ -1,0 +1,15 @@
+  {
+  "name": "Midlands",
+  "color": "#6BA856",
+  "landBiomeZoom": 6,
+  "shoreHeightMax": 1,
+  "landBiomes": [
+    "midlands/tidy-forest-low/young-birch-forest",
+  ],
+  "seaBiomes": [
+    "midlands/oceans/still-waters"
+  ],
+  "shoreBiomes": [
+    "midlands/shores/beach"
+  ]
+}

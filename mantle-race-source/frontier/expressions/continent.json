@@ -1,0 +1,31 @@
+{
+    "expression": "1 - continent",
+    "variables": [
+        {
+            "name": "continent",
+            "styleValue": {
+                "style": "VASCULAR_THIN",
+                "zoom": 15,
+                "exponent": 0.28,
+                "fracture": {
+                    "style": "FRACTAL_SMOKE",
+                    "zoom": 3,
+                    "multiplier": 700
+                }
+            }
+        },
+        {
+            "name": "oceans",
+            "styleValue": {
+                "style": "VIGOCTAVE_FRACTAL_BILLOW_SIMPLEX",
+                "zoom": 30,
+                "exponent": 1,
+                "fracture": {
+                    "style": "FRACTAL_SMOKE",
+                    "zoom": 3,
+                    "multiplier": 10
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,42 @@
+{
+  "chance": 0.03,
+  "style": {
+    "style": "IRIS",
+    "zoom": 0.42,
+    "exponent": 3.5,
+    "fracture": {
+      "style": "STATIC",
+      "multiplier": 20
+    }
+  },
+  "slopeCondition":{
+    "maximumSlope": 5
+  },
+  "forcePlace": false,
+  "palette": [
+    {
+      "block": "minecraft:oak_leaves",
+      "weight": 1
+    },
+    {
+      "block": "minecraft:brown_mushroom",
+      "weight": 1
+    },
+    {
+      "block": "minecraft:fern",
+      "weight": 6
+    },
+    {
+      "block": "minecraft:large_fern",
+      "weight": 6
+    },
+    {
+      "block": "minecraft:bush",
+      "weight": 6
+    },
+    {
+      "block": "minecraft:air",
+      "weight": 18
+    }
+  ]
+}

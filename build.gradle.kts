@@ -1,5 +1,10 @@
 import de.undercouch.gradle.tasks.download.Download
+import org.gradle.api.GradleException
+import org.gradle.api.tasks.GradleBuild
+import org.gradle.api.tasks.testing.Test
 import xyz.jpenilla.runpaper.task.RunServer
+import java.io.File
+import java.util.ArrayDeque
 import kotlin.system.exitProcess
 
 /*
@@ -117,6 +122,278 @@ dependencies {
     }
     included(project(":core", "shadow"))
     jarJar(project(":core:agent"))
+
+    testImplementation(platform("org.junit:junit-bom:5.11.4"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+fun extractQuotedStrings(json: String): Sequence<String> =
+    Regex(""""((?:\\\\.|[^"\\\\])*)"""")
+        .findAll(json)
+        .map { match -> match.groupValues[1].replace("\\\"", "\"").replace("\\\\", "\\") }
+
+fun resolvePackReferences(packRoot: File, reference: String): List<File> {
+    val normalized = reference.trim().removePrefix("./")
+    if (normalized.isBlank() || ':' in normalized || normalized.startsWith("minecraft/")) {
+        return emptyList()
+    }
+
+    val candidates = linkedSetOf(
+        normalized,
+        "$normalized.json",
+        "$normalized.iob",
+        "$normalized.iobs",
+        "dimensions/$normalized.json",
+        "regions/$normalized.json",
+        "biomes/$normalized.json",
+        "generators/$normalized.json",
+        "expressions/$normalized.json",
+        "objects/$normalized.json",
+        "objects/$normalized.iob",
+        "objects/$normalized.iobs",
+        "snippet/$normalized.json"
+    )
+
+    val matches = linkedSetOf<File>()
+    candidates.map(packRoot::resolve).filter(File::isFile).forEach(matches::add)
+
+    if (normalized.startsWith("snippet/")) {
+        val snippetName = normalized.removePrefix("snippet/").substringAfterLast('/')
+        val snippetRoot = packRoot.resolve("snippet")
+        if (snippetRoot.isDirectory) {
+            snippetRoot.walkTopDown()
+                .filter { it.isFile && it.extension == "json" && it.nameWithoutExtension == snippetName }
+                .forEach(matches::add)
+        }
+    }
+
+    return matches.toList()
+}
+
+fun collectPackFiles(packRoot: File, sourceDimension: String): Set<File> {
+    val collected = linkedSetOf<File>()
+    val pending = ArrayDeque<File>()
+
+    fun include(file: File) {
+        val normalized = file.normalize()
+        if (normalized.isFile && collected.add(normalized)) {
+            pending += normalized
+            if (normalized.extension == "iob") {
+                val siblingIobs = File(normalized.parentFile, "${normalized.nameWithoutExtension}.iobs")
+                if (siblingIobs.isFile) {
+                    include(siblingIobs)
+                }
+            }
+        }
+    }
+
+    include(packRoot.resolve("dimensions/$sourceDimension.json"))
+    listOf(
+        packRoot.resolve("biomes/empty.json"),
+        packRoot.resolve("regions/empty.json"),
+        packRoot.resolve("generators/empty.json")
+    ).filter(File::isFile).forEach(::include)
+
+    while (pending.isNotEmpty()) {
+        val file = pending.removeFirst()
+        if (file.extension != "json") {
+            continue
+        }
+
+        extractQuotedStrings(file.readText()).forEach { reference ->
+            resolvePackReferences(packRoot, reference).forEach(::include)
+        }
+    }
+
+    return collected
+}
+
+val mantleRaceResultsRoot = layout.buildDirectory.dir("integration-results/mantle-race/v1_21_R6")
+val mantleRaceResultFile = mantleRaceResultsRoot.map { it.file("latest-report.properties") }
+val mantleRaceRadius = providers.systemProperty("iris.integration.mantleRace.radius").orElse("5000")
+val mantleRaceMinChunks = providers.systemProperty("iris.integration.mantleRace.minChunks").orElse("15000")
+val mantleRaceMaxMissingStableRate = providers.systemProperty("iris.integration.mantleRace.maxMissingStableRate").orElse("0.0002")
+val mantleRaceMaxStableMismatchRate = providers.systemProperty("iris.integration.mantleRace.maxStableMismatchRate").orElse("0.0005")
+val mantleRaceScanThreads = providers.systemProperty("iris.integration.mantleRace.scanThreads").orElse("4")
+val mantleRaceSourceDimension = "frontier"
+val mantleRacePersistentSourcePackDir = layout.projectDirectory.dir("mantle-race-source/frontier")
+val mantleRaceSourcePackDir = providers.systemProperty("iris.integration.mantleRace.sourcePackDir")
+    .orElse(providers.provider { mantleRacePersistentSourcePackDir.asFile.absolutePath })
+val mantleRacePreparedPack = providers.systemProperty("iris.integration.mantleRace.dimension").orElse("frontier")
+val mantleRaceWorldName = providers.systemProperty("iris.integration.mantleRace.worldName").orNull
+val mantleRaceServerPort = providers.systemProperty("iris.integration.mantleRace.serverPort").orElse("25575")
+val mantleRaceRunDirectory = layout.buildDirectory.dir("integration-tests/mantle-race/v1_21_R6/server")
+
+val prepareMantleRacePackV1_21_R6 = tasks.register("prepareMantleRacePack-v1_21_R6") {
+    group = "verification"
+    description = "Creates a stripped, rebranded mantle race pack copy for the integration test."
+
+    outputs.upToDateWhen { false }
+
+    doLast {
+        val sourcePackDir = file(mantleRaceSourcePackDir.get())
+        if (!sourcePackDir.isDirectory) {
+            throw GradleException("Mantle race source pack is missing: ${sourcePackDir.absolutePath}")
+        }
+
+        val sourceDimension = mantleRaceSourceDimension
+        val targetPackName = mantleRacePreparedPack.get()
+        val targetPackDir = mantleRaceRunDirectory.get().asFile.resolve("plugins/Iris/packs/$targetPackName")
+        val collectedFiles = collectPackFiles(sourcePackDir, sourceDimension)
+        val sourceDimensionFile = sourcePackDir.resolve("dimensions/$sourceDimension.json").normalize()
+
+        targetPackDir.deleteRecursively()
+        targetPackDir.mkdirs()
+
+        collectedFiles.forEach { source ->
+            val relativePath = source.relativeTo(sourcePackDir).path.replace(File.separatorChar, '/')
+            val target = if (source.normalize() == sourceDimensionFile) {
+                targetPackDir.resolve("dimensions/$targetPackName.json")
+            } else {
+                targetPackDir.resolve(relativePath)
+            }
+
+            target.parentFile.mkdirs()
+            if (source.normalize() == sourceDimensionFile) {
+                source.copyTo(target, overwrite = true)
+            } else {
+                source.copyTo(target, overwrite = true)
+            }
+        }
+
+        logger.lifecycle(
+            "Prepared mantle race pack '{}' with {} files from '{}'",
+            targetPackName,
+            collectedFiles.size,
+            sourcePackDir.absolutePath
+        )
+    }
+}
+
+val runMantleRaceServerV1_21_R6 = tasks.register<RunServer>("runMantleRaceServer-v1_21_R6") {
+    group = "verification"
+    description = "Launches Paper and runs the mantle/world parity integration harness."
+
+    dependsOn("jar")
+    dependsOn(prepareMantleRacePackV1_21_R6)
+
+    minecraftVersion(nmsBindings.getValue("v1_21_R6").split("-")[0])
+    minHeapSize = serverMinHeap
+    maxHeapSize = serverMaxHeap
+    pluginJars(tasks.jar.flatMap { it.archiveFile })
+    javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(21) }
+    runDirectory.convention(mantleRaceRunDirectory)
+    systemProperty("disable.watchdog", "true")
+    systemProperty("net.kyori.ansi.colorLevel", color)
+    systemProperty("com.mojang.eula.agree", true)
+    systemProperty("iris.suppressReporting", !errorReporting)
+    systemProperty("iris.integration.mantleRace.enabled", true)
+    systemProperty("iris.integration.mantleRace.radius", mantleRaceRadius.get())
+    systemProperty("iris.integration.mantleRace.minChunks", mantleRaceMinChunks.get())
+    systemProperty("iris.integration.mantleRace.maxMissingStableRate", mantleRaceMaxMissingStableRate.get())
+    systemProperty("iris.integration.mantleRace.maxStableMismatchRate", mantleRaceMaxStableMismatchRate.get())
+    systemProperty("iris.integration.mantleRace.scanThreads", mantleRaceScanThreads.get())
+    systemProperty("iris.integration.mantleRace.dimension", mantleRacePreparedPack.get())
+    systemProperty("iris.integration.mantleRace.resultFile", mantleRaceResultFile.map { it.asFile.absolutePath }.get())
+    jvmArgs("-javaagent:${project(":core:agent").tasks.jar.flatMap { it.archiveFile }.get().asFile.absolutePath}")
+    jvmArgs(additionalFlags.split(' '))
+
+    if (mantleRaceWorldName != null) {
+        systemProperty("iris.integration.mantleRace.worldName", mantleRaceWorldName)
+    }
+
+    outputs.upToDateWhen { false }
+
+    doFirst {
+        val file = mantleRaceResultFile.get().asFile
+        file.parentFile.mkdirs()
+        file.delete()
+
+        val runDir = runDirectory.get().asFile
+        runDir.mkdirs()
+        runDir.resolve("server.properties").writeText(
+            """
+            server-port=${mantleRaceServerPort.get()}
+            motd=Mantle Race Integration
+            online-mode=false
+            """.trimIndent() + System.lineSeparator()
+        )
+    }
+}
+
+val warmupMantleRaceServerV1_21_R6 = tasks.register<RunServer>("warmupMantleRaceServer-v1_21_R6") {
+    group = "verification"
+    description = "Boots Paper once so Iris can install any required datapack entries before the real mantle race test."
+
+    dependsOn("jar")
+    dependsOn(prepareMantleRacePackV1_21_R6)
+
+    minecraftVersion(nmsBindings.getValue("v1_21_R6").split("-")[0])
+    minHeapSize = serverMinHeap
+    maxHeapSize = serverMaxHeap
+    pluginJars(tasks.jar.flatMap { it.archiveFile })
+    javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(21) }
+    runDirectory.convention(mantleRaceRunDirectory)
+    systemProperty("disable.watchdog", "true")
+    systemProperty("net.kyori.ansi.colorLevel", color)
+    systemProperty("com.mojang.eula.agree", true)
+    systemProperty("iris.suppressReporting", !errorReporting)
+    systemProperty("iris.integration.shutdownAfterStartup", true)
+    systemProperty("iris.integration.mantleRace.dimension", mantleRacePreparedPack.get())
+    jvmArgs("-javaagent:${project(":core:agent").tasks.jar.flatMap { it.archiveFile }.get().asFile.absolutePath}")
+    jvmArgs(additionalFlags.split(' '))
+
+    outputs.upToDateWhen { false }
+
+    doFirst {
+        val runDir = runDirectory.get().asFile
+        runDir.mkdirs()
+        runDir.resolve("server.properties").writeText(
+            """
+            server-port=${mantleRaceServerPort.get()}
+            motd=Mantle Race Warmup
+            online-mode=false
+            """.trimIndent() + System.lineSeparator()
+        )
+    }
+}
+
+runMantleRaceServerV1_21_R6.configure {
+    dependsOn(warmupMantleRaceServerV1_21_R6)
+    mustRunAfter(warmupMantleRaceServerV1_21_R6)
+}
+
+tasks.register<Test>("mantleRaceIntegrationTest") {
+    group = "verification"
+    description = "Runs the mantle/world parity regression test against a live Paper server."
+
+    dependsOn(runMantleRaceServerV1_21_R6)
+    testClassesDirs = sourceSets.test.get().output.classesDirs
+    classpath = sourceSets.test.get().runtimeClasspath
+    useJUnitPlatform {
+        includeTags("mantle-race")
+    }
+    systemProperty("iris.test.mantleRace.reportFile", mantleRaceResultFile.map { it.asFile.absolutePath }.get())
+    outputs.upToDateWhen { false }
+}
+
+tasks.register<GradleBuild>("mantleRaceIntegrationTestMini") {
+    group = "verification"
+    description = "Runs mantleRaceIntegrationTest with iris.integration.mantleRace.radius=2500 and a smaller minimum sample gate."
+    tasks = listOf("mantleRaceIntegrationTest")
+    startParameter.systemPropertiesArgs.putAll(
+        mapOf(
+            "iris.integration.mantleRace.radius" to "2500",
+            "iris.integration.mantleRace.minChunks" to "2500"
+        )
+    )
+}
+
+tasks.named<Test>("test") {
+    useJUnitPlatform {
+        excludeTags("mantle-race")
+    }
 }
 
 tasks {

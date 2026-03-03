@@ -1,0 +1,82 @@
+{
+  "name": "Deep Forests",
+  "derivative": "FOREST",
+  "vanillaDerivative": "FOREST",
+  "color": "#1A4D1A",
+  "rarity": 1,
+  "generators": [
+    {
+      "generator": "plain",
+      "max": 34,
+      "min": 27
+    }
+  ],
+  "layers": [
+    {
+      "minHeight": 2,
+      "maxHeight": 4,
+      "style": {
+        "style": "FRACTAL_WATER",
+        "fracture": {
+          "style": "STATIC",
+          "multiplier": 15
+        }
+      },
+      "zoom": 0.4,
+      "slopeCondition": {
+        "minimumSlope": 3.95,
+        "maximumSlope": 6
+      },
+      "palette": [
+        {
+          "block": "minecraft:mud",
+          "weight": 4
+        },
+        {
+          "block": "minecraft:cobblestone",
+          "weight": 4
+        },
+        {
+          "block": "minecraft:tuff",
+          "weight": 4
+        },
+        {
+          "block": "minecraft:stone",
+          "weight": 10
+        }
+      ]
+    },
+    {
+      "style": {
+        "style": "STATIC_HERMITE",
+        "zoom": 0.004,
+        "exponent": 3
+      },
+      "palette": [
+        {
+          "weight": 3,
+          "block": "minecraft:grass_block"
+        },
+        {
+          "weight": 2,
+          "block": "minecraft:rooted_dirt"
+        },
+        {
+          "weight": 3,
+          "block": "minecraft:podzol"
+        }
+      ]
+    },
+    {
+      "maxHeight": 1,
+      "palette": [
+        {
+          "block": "minecraft:coarse_dirt"
+        }
+      ]
+    }
+  ],
+  "decorators": [
+    "snippet/forest"
+  ]
+}

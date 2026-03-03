@@ -1,0 +1,13 @@
+{
+    "name": "Empty",
+    "color": "#808080",
+    "landBiomes": [
+        "empty"
+    ],
+    "seaBiomes": [
+        "empty"
+    ],
+    "shoreBiomes": [
+        "empty"
+    ]
+}

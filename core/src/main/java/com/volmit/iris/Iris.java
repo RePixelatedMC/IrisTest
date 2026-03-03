@@ -29,6 +29,7 @@ import com.volmit.iris.core.link.MultiverseCoreLink;
 import com.volmit.iris.core.loader.IrisData;
 import com.volmit.iris.core.nms.INMS;
 import com.volmit.iris.core.pregenerator.LazyPregenerator;
+import com.volmit.iris.core.integration.MantleRaceIntegration;
 import com.volmit.iris.core.service.StudioSVC;
 import com.volmit.iris.core.tools.IrisToolbelt;
 import com.volmit.iris.engine.EnginePanic;
@@ -463,6 +464,13 @@ public class Iris extends VolmitPlugin implements Listener {
             checkForBukkitWorlds(s -> true);
             IrisToolbelt.retainMantleDataForSlice(String.class.getCanonicalName());
             IrisToolbelt.retainMantleDataForSlice(BlockData.class.getCanonicalName());
+            if (Boolean.getBoolean("iris.integration.shutdownAfterStartup")) {
+                J.a(() -> {
+                    Iris.info("Integration warmup complete. Stopping server.");
+                    Bukkit.shutdown();
+                }, 200);
+            }
+            MantleRaceIntegration.tryStart();
         });
     }
 

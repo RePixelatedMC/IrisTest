@@ -70,6 +70,7 @@ dependencies {
 
     // Shaded
     implementation(slimjarHelper("spigot"))
+    implementation("com.github.RePixelatedMC:NBT:master-SNAPSHOT")
 
     // Dynamically Loaded
     slim(libs.paralithic)

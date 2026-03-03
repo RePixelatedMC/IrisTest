@@ -1,0 +1,568 @@
+{
+  "name": "Young Birch Forest",
+  "derivative": "PLAINS",
+  "vanillaDerivative": "PLAINS",
+  "color": "#C8D4C8",
+  "rarity": 1,
+  "childShrinkFactor": 1,
+  "childStyle": {
+    "style": "NOWHERE_CELLULAR",
+    "axialFracturing": true,
+    "fracture": {
+      "multiplier": 55,
+      "axialFracturing": true,
+      "style": "NOWHERE",
+      "zoom": 0.15,
+      "fracture": {
+        "axialFracturing": true,
+        "style": "STATIC",
+        "multiplier": 4
+      }
+    },
+    "zoom": 2
+  },
+  "generators": [
+    {
+      "generator": "plain",
+      "max": 34,
+      "min": 27
+    }
+  ],
+  "layers": [
+    {
+      "minHeight": 2,
+      "maxHeight": 4,
+      "style": {
+        "style": "FRACTAL_WATER",
+        "fracture": {
+          "style": "STATIC",
+          "multiplier": 15
+        }
+      },
+      "zoom": 0.4,
+      "slopeCondition": {
+        "minimumSlope": 3.95,
+        "maximumSlope": 6
+      },
+      "palette": [
+        {
+          "block": "minecraft:mud",
+          "weight": 4
+        },
+        {
+          "block": "minecraft:cobblestone",
+          "weight": 4
+        },
+        {
+          "block": "minecraft:tuff",
+          "weight": 4
+        },
+        {
+          "block": "minecraft:stone",
+          "weight": 10
+        }
+      ]
+    },
+    {
+      "style": {
+        "style": "STATIC_HERMITE",
+        "zoom": 0.004,
+        "exponent": 3
+      },
+      "palette": [
+        {
+          "weight": 3,
+          "block": "minecraft:grass_block"
+        },
+        {
+          "weight": 2,
+          "block": "minecraft:rooted_dirt"
+        },
+        {
+          "weight": 3,
+          "block": "minecraft:podzol"
+        }
+      ]
+    },
+    {
+      "maxHeight": 1,
+      "palette": [
+        {
+          "block": "minecraft:coarse_dirt"
+        }
+      ]
+    },
+    {
+      "maxHeight": 3,
+      "palette": [
+        {
+          "block": "minecraft:dirt",
+          "weight": 2
+        },
+        {
+          "block": "minecraft:rooted_dirt",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "maxHeight": 3,
+      "palette": [
+        {
+          "block": "minecraft:rooted_dirt"
+        }
+      ]
+    },
+    {
+      "maxHeight": 4,
+      "palette": [
+        {
+          "block": "minecraft:packed_mud",
+          "weight": 2
+        },
+        {
+          "block": "minecraft:rooted_dirt"
+        }
+      ]
+    },
+    {
+      "maxHeight": 1,
+      "palette": [
+        {
+          "block": "minecraft:packed_mud"
+        }
+      ]
+    },
+    {
+      "maxHeight": 2,
+      "palette": [
+        {
+          "block": "minecraft:packed_mud",
+          "weight": 2
+        },
+        {
+          "block": "minecraft:mud",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "maxHeight": 2,
+      "palette": [
+        {
+          "block": "minecraft:mud"
+        }
+      ]
+    },
+    {
+      "maxHeight": 1,
+      "palette": [
+        {
+          "block": "minecraft:mud",
+          "weight": 2
+        },
+        {
+          "block": "minecraft:muddy_mangrove_roots"
+        }
+      ]
+    },
+    {
+      "maxHeight": 1,
+      "palette": [
+        {
+          "block": "minecraft:muddy_mangrove_roots"
+        }
+      ]
+    },
+    {
+      "maxHeight": 1,
+      "palette": [
+        {
+          "block": "minecraft:mangrove_roots"
+        },
+        {
+          "block": "minecraft:muddy_mangrove_roots"
+        }
+      ]
+    },
+    {
+      "maxHeight": 1,
+      "palette": [
+        {
+          "block": "minecraft:mangrove_roots",
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "maxHeight": 1,
+      "palette": [
+        {
+          "block": "minecraft:mangrove_roots",
+          "weight": 2
+        },
+        {
+          "block": "minecraft:cobblestone"
+        },
+        {
+          "block": "minecraft:mossy_cobblestone"
+        }
+      ]
+    },
+    {
+      "maxHeight": 1,
+      "palette": [
+        {
+          "block": "minecraft:cobblestone"
+        },
+        {
+          "block": "minecraft:mossy_cobblestone"
+        }
+      ]
+    },
+    {
+      "maxHeight": 1,
+      "palette": [
+        {
+          "block": "minecraft:andesite",
+          "weight": 2
+        },
+        {
+          "block": "minecraft:cobblestone"
+        },
+        {
+          "block": "minecraft:mossy_cobblestone"
+        }
+      ]
+    },
+    {
+      "maxHeight": 2,
+      "palette": [
+        {
+          "block": "minecraft:andesite"
+        }
+      ]
+    },
+    {
+      "maxHeight": 1,
+      "palette": [
+        {
+          "block": "minecraft:stone",
+          "weight": 2
+        },
+        {
+          "block": "minecraft:andesite"
+        }
+      ]
+    }
+  ],
+  "wall": {
+    "palette": [
+      {
+        "block": "minecraft:stone"
+      },
+      {
+        "block": "minecraft:andesite"
+      },
+      {
+        "block": "minecraft:gravel"
+      },
+      {
+        "block": "minecraft:basalt"
+      }
+    ]
+  },
+  "decorators": [
+    {
+      "chance": 0.2,
+      "variance": {
+        "style": "CELLULAR",
+        "zoom": 0.3,
+        "fracture": {
+          "style": "SIMPLEX",
+          "zoom": 0.2,
+          "multiplier": 10,
+          "fracture": {
+            "style": "STATIC",
+            "multiplier": 15
+          }
+        }
+      },
+      "style": {
+        "style": "TRIOCTAVE_SIMPLEX",
+        "zoom": 0.3,
+        "fracture": {
+          "style": "STATIC",
+          "multiplier": 8
+        }
+      },
+      "palette": [
+        {
+          "block": "minecraft:dandelion"
+        },
+        {
+          "block": "minecraft:poppy"
+        },
+        {
+          "block": "minecraft:blue_orchid"
+        },
+        {
+          "block": "minecraft:allium"
+        },
+        {
+          "block": "minecraft:azure_bluet"
+        },
+        {
+          "block": "minecraft:red_tulip"
+        },
+        {
+          "block": "minecraft:orange_tulip"
+        },
+        {
+          "block": "minecraft:white_tulip"
+        },
+        {
+          "block": "minecraft:pink_tulip"
+        },
+        {
+          "block": "minecraft:oxeye_daisy"
+        },
+        {
+          "block": "minecraft:cornflower"
+        },
+        {
+          "block": "minecraft:lily_of_the_valley"
+        }
+      ]
+    },
+    {
+      "chance": 0.01,
+      "palette": [
+        {
+          "block": "minecraft:tall_grass"
+        }
+      ]
+    },
+    {
+      "chance": 0.5,
+      "palette": [
+        {
+          "block": "minecraft:short_grass"
+        }
+      ]
+    },
+    {
+      "chance": 0.15,
+      "palette": [
+        {
+          "block": "minecraft:fern"
+        }
+      ]
+    },
+    {
+      "chance": 0.15,
+      "palette": [
+        {
+          "block": "minecraft:fern"
+        }
+      ]
+    },
+    "snippet/leaf-thick",
+    "snippet/bush",
+    "snippet/wildflowers",
+    "snippet/forest"
+  ],
+  "objects": [
+    {
+      "mode": "CENTER_HEIGHT",
+      "place": [
+        "trees/birch/medponderosa1",
+        "trees/birch/medponderosa2",
+        "trees/birch/medponderosa3",
+        "trees/birch/medponderosa4",
+        "trees/birch/medponderosa5",
+        "trees/birch/medponderosa6",
+        "trees/birch/medponderosa7",
+        "trees/birch/medponderosa8",
+        "trees/birch/medponderosa9",
+        "trees/birch/medponderosa10",
+        "trees/birch/medponderosa11",
+        "trees/birch/medponderosa12"
+      ],
+      "chance": 0.7,
+      "density": 2,
+      "rotation": {
+        "enabled": true,
+        "yAxis": {
+          "enabled": true,
+          "interval": 90,
+          "min": 0,
+          "max": 270
+        }
+      }
+    },
+    {
+      "mode": "CENTER_HEIGHT",
+      "place": [
+        "trees/birch/smolponderosa1",
+        "trees/birch/smolponderosa2",
+        "trees/birch/smolponderosa3",
+        "trees/birch/smolponderosa4",
+        "trees/birch/smolponderosa5",
+        "trees/birch/smolponderosa6",
+        "trees/birch/smolponderosa7",
+        "trees/birch/smolponderosa8",
+        "trees/birch/smolponderosa9",
+        "trees/birch/smolponderosa10",
+        "trees/birch/smolponderosa11",
+        "trees/birch/medponderosa12"
+      ],
+      "chance": 0.25,
+      "density": 1,
+      "rotation": {
+        "enabled": true,
+        "yAxis": {
+          "enabled": true,
+          "interval": 90,
+          "min": 0,
+          "max": 270
+        }
+      }
+    },
+    {
+      "mode": "CENTER_HEIGHT",
+      "place": [
+        "trees/birch/medponderosa1",
+        "trees/birch/medponderosa2",
+        "trees/birch/medponderosa3",
+        "trees/birch/medponderosa4",
+        "trees/birch/medponderosa5",
+        "trees/birch/medponderosa6",
+        "trees/birch/medponderosa7",
+        "trees/birch/medponderosa8",
+        "trees/birch/medponderosa9",
+        "trees/birch/medponderosa10",
+        "trees/birch/medponderosa11",
+        "trees/birch/medponderosa12"
+      ],
+      "chance": 0.26,
+      "density": 2,
+      "edit": [
+        {
+          "chance": 1,
+          "exact": false,
+          "find": [
+            {
+              "block": "minecraft:birch_wood"
+            }
+          ],
+          "replace": {
+            "palette": [
+              {
+                "block": "minecraft:stripped_birch_wood"
+              }
+            ]
+          }
+        }
+      ],
+      "rotation": {
+        "enabled": true,
+        "yAxis": {
+          "enabled": true,
+          "interval": 90,
+          "min": 0,
+          "max": 270
+        }
+      }
+    },
+        {
+      "mode": "PAINT",
+      "place": [
+        "clutter/arbusto1",
+        "clutter/arbusto2",
+        "clutter/arbusto4",
+        "clutter/arbusto5"
+      ],
+      "edit": [
+        {
+          "chance": 1,
+          "exact": false,
+          "find": [
+            {
+              "block": "minecraft:oak_leaves"
+            }
+          ],
+          "replace":{
+            "palette": [
+              {
+                "block": "minecraft:azalea_leaves"
+              }
+            ]
+          }
+        }
+      ],
+      "chance": 0.2,
+      "density": 1,
+      "rotation": {
+        "enabled": true,
+        "yAxis": {
+          "enabled": true,
+          "interval": 90,
+          "min": -360,
+          "max": 360
+        }
+      },
+      "translate": {
+        "y": 1
+      }
+    },
+    {
+      "mode": "PAINT",
+      "place": [
+        "clutter/arbusto1",
+        "clutter/arbusto2",
+        "clutter/arbusto4",
+        "clutter/arbusto5"
+      ],
+      "chance": 0.2,
+      "density": 1,
+      "rotation": {
+        "enabled": true,
+        "yAxis": {
+          "enabled": true,
+          "interval": 90,
+          "min": -360,
+          "max": 360
+        }
+      },
+      "translate": {
+        "y": 1
+      }
+    },
+    {
+      "mode": "PAINT",
+      "place": [
+        "clutter/rock1",
+        "clutter/rock2",
+        "clutter/rock3",
+        "clutter/rock4"
+      ],
+      "chance": 0.15,
+      "density": 1,
+      "rotation": {
+        "enabled": true,
+        "yAxis": {
+          "enabled": true,
+          "interval": 90,
+          "min": 0,
+          "max": 270
+        }
+      },
+      "translate": {
+        "x": 0,
+        "y": 1,
+        "z": 0
+      }
+    }
+  ]
+}
