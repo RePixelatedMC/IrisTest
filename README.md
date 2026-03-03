@@ -1,3 +1,25 @@
+ ## Mantle Race Integration Test
+
+  Use the mantle race integration tasks to verify that stable mantle block data matches the generated world for the bundled `frontier` test pack.
+
+  ```bash
+  ./gradlew mantleRaceIntegrationTestMini
+  ./gradlew mantleRaceIntegrationTest
+  ```
+
+  Useful overrides:
+```bash
+  ./gradlew mantleRaceIntegrationTestMini -Diris.integration.mantleRace.scanThreads=4
+  ./gradlew mantleRaceIntegrationTest -Diris.integration.mantleRace.radius=5000 -Diris.integration.mantleRace.minChunks=15000
+  ```
+
+  Reports are written to:
+
+  - build/integration-results/mantle-race/v1_21_R6/latest-report.properties
+  - build/integration-results/mantle-race/v1_21_R6/report-<timestamp>-<status>.properties
+
+Use the none-mini one for more accurate test results but tbh the mini should actually be totally fine but oh well. 
+
 # Iris
 
 The master branch is for the latest version of minecraft.
